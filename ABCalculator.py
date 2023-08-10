@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox as mb
 import os
 import math
+from scipy.stats import norm
 
 
 # Обработчик закрытия программы
@@ -38,7 +39,7 @@ def popup_result(n1, c1, n2, c2):
     
     # Поле вывода текста
     txtOutput = tk.Text(wResult, font=('Helvetica', 10, 'bold'),)
-    txtOutput.place(y=50, x=10, width=480, height=400)
+    txtOutput.place(y=80, x=10, width=480, height=370)
     
     # Заголовок поля вывода текста
     txtOutput.insert(tk.END, 60*' '+'Контрольная'+10*' '+'Тестовая'+os.linesep)
@@ -96,6 +97,44 @@ def popup_result(n1, c1, n2, c2):
     txtOutput.insert(tk.END, 37*' '+'От:'+12*' '+num_percent(low1_99)+16*' '+num_percent(low2_99)+os.linesep)
     txtOutput.insert(tk.END, 37*' '+'До:'+12*' '+num_percent(upp1_99)+16*' '+num_percent(upp2_99)+os.linesep)
     
+    # Вычисление Z и P
+    txtOutput.insert(tk.END, 119*'-'+os.linesep)
+    
+    z_score = (p2 - p1)/math.sqrt(sigma1*sigma1+sigma2*sigma2)
+    txtOutput.insert(tk.END, 'Z = '+'{:.7f}'.format(z_score)+os.linesep)
+    
+    p_value = norm.sf(x=z_score, loc=0, scale=1)
+    txtOutput.insert(tk.END, 'P = '+'{:.7f}'.format(p_value)+os.linesep)
+    
+    # Оценка результатов
+    confidence_95 = False
+    if p_value < 0.025 or p_value > 0.975:
+        confidence_95 = True                # 95% (p = 2.5%)
+    
+    confidence_99 = False
+    if p_value < 0.005 or p_value > 0.995:
+        confidence_99 = True                # 99% (p = 0.5%)
+    
+    lblComment95 = tk.Label(wResult, text='95%-уверенность:', font=('Helvetica', 10, 'bold'))
+    lblComment95.place(y=15, x=10)
+    
+    if confidence_95:
+        lblResult95 = tk.Label(wResult, text='Да', font=('Helvetica', 12, 'bold'), fg='green')
+        lblResult95.place(y=15, x=150)
+    else:
+        lblResult95 = tk.Label(wResult, text='Нет', font=('Helvetica', 12, 'bold'), fg='red')
+        lblResult95.place(y=15, x=150)
+    
+    lblComment99 = tk.Label(wResult, text='99%-уверенность:', font=('Helvetica', 10, 'bold'))
+    lblComment99.place(y=40, x=10)
+    
+    if confidence_99:
+        lblResult99 = tk.Label(wResult, text='Да', font=('Helvetica', 12, 'bold'), fg='green')
+        lblResult99.place(y=40, x=150)
+    else:
+        lblResult99 = tk.Label(wResult, text='Нет', font=('Helvetica', 12, 'bold'), fg='red')
+        lblResult99.place(y=40, x=150)
+    
     # Кнопка закрытия окна
     btnClosePopup = tk.Button(wResult, text='Закрыть', font=('Helvetica', 10, 'bold'), command=wResult.destroy)
     btnClosePopup.place(y=460, x=205, width=90, height=30)
@@ -120,14 +159,14 @@ lblVisit.place(y=41, x=10)
 
 entVisit = tk.Entry(font=('Helvetica', 12, 'bold'), justify='center')
 entVisit.place(y=41, x=125, width=130, height=24)
-entVisit.insert(tk.END, '255') # предустановленное значение
+entVisit.insert(tk.END, '0') # предустановленное значение 255
 
 lblConv = tk.Label(text='Конверсии:', font=('Helvetica', 12, 'bold'), fg='red')
 lblConv.place(y=70, x=10)
 
 entConv = tk.Entry(font=('Helvetica', 12, 'bold'), justify='center')
 entConv.place(y=70, x=125, width=130, height=20)
-entConv.insert(tk.END, '26') # предустановленное значение
+entConv.insert(tk.END, '0') # предустановленное значение 26
 
 # Заголовок тестовой группы
 lblTitle2 = tk.Label(text='Тестовая группа', font=('Helvetica', 14, 'bold'), fg='green')
@@ -139,14 +178,14 @@ lblVisit2.place(y=131, x=10)
 
 entVisit2 = tk.Entry(font=('Helvetica', 12, 'bold'), justify='center')
 entVisit2.place(y=131, x=125, width=130, height=20)
-entVisit2.insert(tk.END, '235') # предустановленное значение
+entVisit2.insert(tk.END, '0') # предустановленное значение 235
 
 lblConv2 = tk.Label(text='Конверсии:', font=('Helvetica', 12, 'bold'), fg='green')
 lblConv2.place(y=160, x=10)
 
 entConv2 = tk.Entry(font=('Helvetica', 12, 'bold'), justify='center')
 entConv2.place(y=160, x=125, width=130, height=20)
-entConv2.insert(tk.END, '18') # предустановленное значение
+entConv2.insert(tk.END, '0') # предустановленное значение 18
 
 
 #-----
