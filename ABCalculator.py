@@ -53,6 +53,49 @@ def popup_result(n1, c1, n2, c2):
     sigma2 = math.sqrt(p2*(1-p2)/n2)
     txtOutput.insert(tk.END, 'Стандартное отклонение'+12*' '+num_percent(sigma1)+18*' '+num_percent(sigma2)+os.linesep)
     
+    # Возможный разброс
+    z1 = 1.96
+    
+    low1_95 = p1 - z1 * sigma1
+    if low1_95 < 0:
+        low1_95 = 0
+    upp1_95 = p1 + z1 * sigma1
+    if upp1_95 > 1:
+        upp1_95 = 1
+    
+    low2_95 = p2 - z1 * sigma2
+    if low2_95 < 0:
+        low2_95 = 0
+    upp2_95 = p2 + z1 * sigma2
+    if upp2_95 > 1:
+        upp2_95 = 1
+    
+    txtOutput.insert(tk.END, 119*'-'+os.linesep)
+    txtOutput.insert(tk.END, '95%-возможный разброс'+os.linesep)
+    txtOutput.insert(tk.END, 37*' '+'От:'+12*' '+num_percent(low1_95)+16*' '+num_percent(low2_95)+os.linesep)
+    txtOutput.insert(tk.END, 37*' '+'До:'+12*' '+num_percent(upp1_95)+16*' '+num_percent(upp2_95)+os.linesep)
+    
+    z2 = 2.575
+    
+    low1_99 = p1 - z2 * sigma1
+    if low1_99 < 0:
+        low1_99 = 0
+    upp1_99 = p1 + z2 * sigma1
+    if upp1_99 > 1:
+        upp1_99 = 1
+    
+    low2_99 = p2 - z2 * sigma2
+    if low2_99 < 0:
+        low2_99 = 0
+    upp2_99 = p2 + z2 * sigma2
+    if upp2_99 > 1:
+        upp2_99 = 1
+    
+    txtOutput.insert(tk.END, 119*'-'+os.linesep)
+    txtOutput.insert(tk.END, '99%-возможный разброс'+os.linesep)
+    txtOutput.insert(tk.END, 37*' '+'От:'+12*' '+num_percent(low1_99)+16*' '+num_percent(low2_99)+os.linesep)
+    txtOutput.insert(tk.END, 37*' '+'До:'+12*' '+num_percent(upp1_99)+16*' '+num_percent(upp2_99)+os.linesep)
+    
     # Кнопка закрытия окна
     btnClosePopup = tk.Button(wResult, text='Закрыть', font=('Helvetica', 10, 'bold'), command=wResult.destroy)
     btnClosePopup.place(y=460, x=205, width=90, height=30)
